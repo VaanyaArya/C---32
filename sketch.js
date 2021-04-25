@@ -9,9 +9,11 @@ var backgroundImg,platform;
 var bird, slingshot;
 
 var gameState = "onSling";
+var score = 0;
 
+var bgImg = "sprites/bg.png"
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    getBackgroundImg();
 }
 
 function setup(){
@@ -42,10 +44,24 @@ function setup(){
 
     //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
+
 }
 
 function draw(){
-    background(backgroundImg);
+
+    if (bgImg){
+    background(bgImg);
+    }else{
+        background(0);
+        console.log("test");
+    }
+
+    textSize(35);
+    fill("white");
+    text("Score: "+score,width-300,50)
+
+    pig1.score();
+    pig3.score();
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -85,4 +101,18 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+async function getBackgroundImg(){
+    var response = await fetch("https://worldtimeapi.org/api/timezone/Australia/Sydney");
+    var responseJSON = await response.json();
+    var dateTime = responseJSON.datetime;
+    var hour = dateTime.slice(11,13);
+    if (hour>=0 && hour<19){
+        bg = "sprites/bg.png"
+    }
+    else{
+        bg = "sprites/bg2.jpg"
+    }
+    bgImg = loadImage(bg);
 }
